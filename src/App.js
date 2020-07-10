@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import {ToDoBanner} from './ToDoBanner';
 import {ToDoRow} from './ToDoRow';
+import {ToDoCreator} from './ToDoCreator';
 
 export default class App extends Component{
   // Above we have created a class called App that extends the functionality of the Component Class.
@@ -40,12 +41,45 @@ export default class App extends Component{
     todoItems: this.state.todoItems.map(item => item.action === todo.action ? {...item, done:!item.done} : item)
   });
 
+  // Method below is the callback for the ToDoCreator Component
+  createNewTodoCallback = (newTask) => {
+    if (!this.state.todoItems.find(x => x.action === this.state.newItemText)) {
+      this.setState({
+        // The spread operator {...} below expands the array of todoItmes and adds the new item to the array
+        todoItems: [...this.state.todoItems, {action: newTask, done: false}]
+      },
+
+      () => localStorage.setItem("todos", JSON.stringify(this.state))
+
+      );
+    }
+  }
+
+  // The method below is a built in react method to handle logic for when the app "mounts" or "loads"
+  componentDidMount = () => {
+    let data = localStorage.getItem("todos");
+    this.setState(data != null ? JSON.parse(data) : {
+      userName: "John Doe",
+       todoItems: [
+         {action: "Do Something", done :false},
+         {action: "Do Something", done: false},
+         {action: "Do Something", done: false}
+        ]
+      }
+    )
+  }
+
   // When using fat arrow (lamda) syntax the return keyword is not needed and the curly braces (scope) around the body of the function is also not needed
   render = () =>
     <div>
       <ToDoBanner
         Name = {this.state.userName}
         Tasks = {this.state.todoItems}
+      />
+
+      {/* Feature 5 */}
+      <ToDoCreator
+        callback = {this.createNewTodoCallback}
       />
 
       <table className="table table-striped table-bordered">
