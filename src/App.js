@@ -4,6 +4,7 @@ import './App.css';
 import {ToDoBanner} from './ToDoBanner';
 import {ToDoRow} from './ToDoRow';
 import {ToDoCreator} from './ToDoCreator';
+import {VisibilityControl} from './VisibilityControl';
 
 export default class App extends Component{
   // Above we have created a class called App that extends the functionality of the Component Class.
@@ -64,7 +65,8 @@ export default class App extends Component{
          {action: "Do Something", done :false},
          {action: "Do Something", done: false},
          {action: "Do Something", done: false}
-        ]
+        ],
+        showCompleted: true
       }
     )
   }
@@ -94,6 +96,17 @@ export default class App extends Component{
         </tbody>
       </table>
 
+    <div className="bg-secondary text-white text-center p-2">
+      <VisibilityControl
+        description = "Completed Tasks"
+        isChecked = {this.state.showCompleted}
+        callback = {checked => this.setState({
+          showCompleted: checked
+        })}
+      />
+    </div>
+
+    {this.state.showCompleted &&
       <table className="table table-striped table-bordered">
         <thead>
           <tr>
@@ -105,6 +118,6 @@ export default class App extends Component{
           {this.todoTableRows(true)}
         </tbody>
       </table>
-
+    }
     </div>
 };
